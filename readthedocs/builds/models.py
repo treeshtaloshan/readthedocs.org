@@ -286,11 +286,11 @@ class Version(models.Model):
 
         if not docroot:
             return ''
-        else:
-            if docroot[0] != '/':
-                docroot = '/{}'.format(docroot)
-            if docroot[-1] != '/':
-                docroot = '{}/'.format(docroot)
+
+        if docroot[0] != '/':
+            docroot = '/{}'.format(docroot)
+        if docroot[-1] != '/':
+            docroot = '{}/'.format(docroot)
 
         if action == 'view':
             action_string = 'blob'
@@ -320,11 +320,11 @@ class Version(models.Model):
 
         if not docroot:
             return ''
-        else:
-            if docroot[0] != '/':
-                docroot = '/{}'.format(docroot)
-            if docroot[-1] != '/':
-                docroot = '{}/'.format(docroot)
+
+        if docroot[0] != '/':
+            docroot = '/{}'.format(docroot)
+        if docroot[-1] != '/':
+            docroot = '{}/'.format(docroot)
 
         if action == 'view':
             action_string = 'blob'
@@ -402,27 +402,6 @@ class APIVersion(Version):
 
     def save(self, *args, **kwargs):
         return 0
-
-
-@python_2_unicode_compatible
-class VersionAlias(models.Model):
-
-    """Alias for a ``Version``."""
-
-    project = models.ForeignKey(
-        Project, verbose_name=_('Project'), related_name='aliases')
-    from_slug = models.CharField(_('From slug'), max_length=255, default='')
-    to_slug = models.CharField(
-        _('To slug'), max_length=255, default='', blank=True)
-    largest = models.BooleanField(_('Largest'), default=False)
-
-    def __str__(self):
-        return ugettext(
-            'Alias for {project}: {_from} -> {to}'.format(
-                project=self.project,
-                _from=self.from_slug,
-                to=self.to_slug,
-            ))
 
 
 @python_2_unicode_compatible

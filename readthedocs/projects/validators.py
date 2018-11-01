@@ -62,9 +62,12 @@ class RepositoryURLValidator(object):
         allow_private_repos = getattr(settings, 'ALLOW_PRIVATE_REPOS', False)
         public_schemes = ['https', 'http', 'git', 'ftps', 'ftp']
         private_schemes = ['ssh', 'ssh+git']
+        local_schemes = ['file']
         valid_schemes = public_schemes
         if allow_private_repos:
             valid_schemes += private_schemes
+        if getattr(settings, 'DEBUG'):  # allow `file://` urls in dev
+            valid_schemes += local_schemes
         url = urlparse(value)
 
         # Malicious characters go first
@@ -85,9 +88,9 @@ class RepositoryURLValidator(object):
         elif self.re_git_user.search(value) or url.scheme in private_schemes:
             if allow_private_repos:
                 return value
-            else:
-                # Throw a more helpful error message
-                raise ValidationError('Manual cloning via SSH is not supported')
+
+            # Throw a more helpful error message
+            raise ValidationError('Manual cloning via SSH is not supported')
 
         # No more valid URLs without supported URL schemes
         raise ValidationError(_('Invalid scheme for URL'))
