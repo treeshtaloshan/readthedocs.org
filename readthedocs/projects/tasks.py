@@ -1364,3 +1364,8 @@ def finish_inactive_builds():
         'Builds marked as "Terminated due inactivity": %s',
         builds_finished,
     )
+
+
+@app.task
+def send_deprecated_endpoint_notifications():
+    pass
